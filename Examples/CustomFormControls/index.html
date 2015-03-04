@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Custom form controls</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+    <script src="script.js"></script>
+    <style type='text/css'>
+      div[contentEditable] {
+        cursor: pointer;
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body ng-app="form-example">
+    <div contentEditable="true" ng-model="content" title="Click to edit">Some text</div>
+    <pre>Model: {{content}}</pre>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Binding classes</title>
+    <meta charset="UTF-8">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-animate.js"></script>-->
+    <link type="text/css" rel="stylesheet" href="style.css" media="all" />
+  </head>
+  <body ng-app>
+    <p ng-class="{strike: deleted, bold: important, red: error}">Map syntax example</p>
+    <input type="checkbox" ng-model="deleted"> Deleted (apply strike)<br>
+    <input type="checkbox" ng-model="important"> Important (apply bold)<br>
+    <input type="checkbox" ng-model="error"> Error (Apply red)<hr>
+    <p ng-class="[style1, style2, style3]">Using Array syntax</p>
+    <input ng-model="style1" placeholder="Type: bold, strike, or red"><br>
+    <input ng-model="style2" placeholder="Type: bold, strike, or red"><br>
+    <input ng-model="style3" placeholder="Type: bold, strike, or red"><br>
+  </body>
+</html>

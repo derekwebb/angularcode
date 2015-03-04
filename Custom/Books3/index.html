@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Book example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+  <body ng-app="bookModule" ng-controller="books.list">
+    <h4>Book list</h4>
+    <ul>
+      <li ng-repeat="book in books">
+        Title: {{book.title}} | Author: {{book.author}}
+      </li>
+    </ul>
+    <form name='form' novalidate>
+      Author: <input ng-model="form.author"><br>
+      Title: <input ng-model="form.title"><br>
+      <button ng-click="addBook(form)">Add book</button>
+      <button ng-click="resetForm(form)">Reset</button>
+    </form>
+  </body>
+</html>

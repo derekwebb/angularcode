@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Filters Extended Example 1</title>
+  </head>
+  <body ng-app="FilterInControllerModule">
+    <div ng-controller="FilterController as ctrl">
+      Filter names by string: <input ng-model="ctrl.filterStr" type="text"><br><br>
+      Add a new name: <input ng-model="ctrl.newName" type="text"><button ng-click="ctrl.addName()">Add name</button>
+      <br><br>
+      <div>
+        All entries:
+        <div ng-repeat="entry in ctrl.array">
+          <button ng-click="ctrl.removeName($index)">X</button>&nbsp;
+          {{entry.name}}
+        </div>
+      </div><br>
+      <div>
+        Entries that contain the string: "{{ctrl.filterStr}}":
+        <div ng-repeat="entry in ctrl.filterMyArray()">{{entry.name}}</div>
+      </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Element wrapping directive 2</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+    <script src="script.js"></script>
+  </head>
+  <body ng-app="docsTransclusionDirective">
+    <div ng-controller="Controller">
+      {{message}}
+      <my-dialog ng-hide="dialogIsHidden" on-close="hideDialog(message)">
+        Check out the contents, {{name}}!
+      </my-dialog>
+    </div>
+  </body>
+</html>

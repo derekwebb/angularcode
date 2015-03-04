@@ -1,0 +1,40 @@
+
+body {
+  width: 50%;
+  margin: 2em auto;
+}
+
+h1 {
+  background: green;
+  padding: .25em .5em;
+  margin-top: 10px;
+  color: white;
+}
+
+.app {
+  padding: .5em 1em;
+  background: #f0f0f0;
+}
+
+.done-true {
+  text-decoration: line-through;
+  color: gray; 
+}
+
+.done-false {
+  color: green; 
+}
+
+.btn {
+  margin-top: .5em;
+  margin-left: .5em;
+}
+
+.btn i {
+  margin-right: .5em;
+  font-weight: bold;
+}
+
+.alert {
+  margin-bottom: .5em;
+}

@@ -1,0 +1,439 @@
+The Angular application
+
+ng-app directive tells angular what part of the page should be managed
+by angular.js.
+
+If you add ng-app to the html tag, Angular will manage everything on the page.
+
+---
+
+Model / View / Controller
+
+- Model contains the data that represents the current state of the application
+- Views are what displays this data
+- Controllers manage the relationship between the model and views
+
+In Angular, te model is creaded using object attributes or possibly
+primitives types containing the data.
+
+---
+
+Modules
+
+Modules provide a namespace for related parts of your application. Modules
+are what helps to keep your application from polluting the global namespace.
+
+---
+
+Templates
+
+Templates in Angular apps are just HTML documents that we load from the server
+or define in a script tag like any other static resource. The UI is defined in
+the template, using standard HTML plus Angular directives where you need
+UI components.
+
+
+---
+
+Flow of Angular application
+
+1. User requests the first page of your application
+2. The users browser makes an HTTP connection to your server and loads the
+   index.html page containing the template
+3. Angular loads into the page, waits for the page to be fully loaded, and then
+   looks for ng-app to define the template boundaries.
+4. Angular traverses the template and looks for directives and bindings. This
+   results in registration of listeners and DOM manipulation, as well as
+   fetching initial data from the server. End result: the app is bootstrapped
+   and the template is converted into view as a DOM.
+5. You connect to your server to load additional data you need to show the user
+   as needed.
+
+NOTE: Steps 1-3 are the same for all Angular apps. 4 & 5 offer choices.
+      4 & 5 can happen synchronously or asynchronously.
+
+TIP: For high performance, the data your app needs to display to the user on
+     the first view should come down with the HTML template to aviod
+     multiple requests.
+
+---
+
+Displaying text
+
+You can display and update text anywhere in you UI using ng-bind directive. It
+has 2 equivalent forms.
+
+1. Double-curly braces:
+   eg: <p>{{greeting}}</p>
+
+2. attribute based binding
+   eg: <p ng-bind="greeting"></p>
+
+Both methods create the same output. The difference is that the users may see
+the {{}} before Angular has had a chance to run.
+
+
+---
+
+Form inputs
+
+The ng-model attribute can bind elements to your model properties and works
+with all the startdard form elements like text inputs, radios, checkboxes,
+and so on.
+
+ng-submit on buttons automatically prevents the browser from doing its default
+POST action when it tries to submit the form.
+
+Angular event-handling directives:
+
+ng-submit
+ng-click
+ng-dblclick
+etc...
+
+
+---
+
+Angular makes writing unit tests easier and more productive by ensuring a clean
+separation between the DOM, and events. This is because Angular js code makes
+no references to the DOM. All DOM access is taken care of within Angular.
+
+
+---
+
+More binding: TIP about IMG and A tags
+
+When data binding to an <img> or an <a> tag, be sure to use ng-src and ng-href.
+Not doing so will not work because the browser will try to use the src or href
+before Angular has had a chance to run.
+
+
+---
+
+Separating UI responsibilities with Controllers
+
+Controllers have 3 responsibilities within an app:
+
+1. Set up the initial state in your application's model
+2. Expose model and functions to the view (UI template) through $scope
+3. Watch other parts of the model for changes and take action
+
+NOTE: The purpose of controllers is to provide the code or logic to execute the
+      user's wishes as they interact with the view (DOM)
+
+TIP: To keep your controllers small and manageable, create one controller per
+     functional area in your view. So for a menu, you might have a MenuController,
+     a BreadCrumbController for the breadcrumb and so on.
+
+The takeaway: Controllers are tied to a specific piece of the DOM that they
+              are in charge of managing.
+
+
+---
+
+Controllers can be nested!
+
+Nested controllers can share model and functions through an inheritance tree.
+To nest controllers, simply declare a controller within another one.
+
+eg:
+
+<div ng-controller="ParentController">
+  <div ng-controller="ChildController">...</div>
+</div>
+
+TIP: Though this is expressed as nesting, the actual nesting occurs in scopes.
+
+***
+BIG IDEA: The job of a controller is to pass data from the model, to the view.
+***
+
+---
+
+Publishing Model data with Scopes
+
+NOTE: Scopes can be thought of as a context that can be used to make changes to
+      the observable model.
+
+Besides setting up scopes explicitly, as in $scope.count = 5, there are also a
+couple of ways to set up the model from the template itself.
+
+1. Through an expression. Since exressions execute in the context of the
+   controller's scope associated with their element, setting properties in
+   expressions is the same as setting a property of the controller's scope. Eg:
+
+   <button ng-click='count=3'>Set count to 3</button>
+
+   is the same as:
+
+   <div ng-controller='CountController'>
+     <button ng-click='setCount()'>Set count to three</button>
+   </div>
+
+   where the controller is defined like:
+
+   function CountController($scope) {
+     $scope.setCount = function() {
+       $scope.count = 3;
+     }
+   }
+
+2. Using ng-model on form input. ng-model works within the scope of the enclosing
+   controller. This method creats a bi-directional data binding between the form
+   field state and the specified model.
+
+
+---
+
+Observing model changs with $watch
+
+$watch is probably the most used of all the scop functions.
+
+$watch can be used to watch idividual propertiesas well as computed results
+(functions).
+
+the $watch function is defined like so:
+
+IMPORTANT: $watch(watchFn, watchAction, deepWatch)
+
+Param meanings:
+
+watchFn: the function or angular expression that returns the current value of
+         the model that you want to watch.
+
+         NOTE: Will be evealuated multiple times so make sure it has no side effects!
+               It should not change state of the model from being called
+               multiple times.
+
+watchAction: This is the function or expression to be called when the watchFn
+             changes. In the function form, it receives the new and old values
+             of watchFn as well as a reference to the scope. Its signature
+             is function(newValue, oldValue, scope).
+
+deepWatch: An optional parameter that tells Angular to examime the property within
+           the watched object for changes. You might use this if you want to
+           watch the individual elements in an array of properties or in an
+           object instead of just a simple value. This is used because Angular
+           needs to know if it should walk the array or object.
+
+           NOTE: this can be computationaly expensive if the object/array is large
+
+
+---
+
+Perfermance considerations in $watch()
+
+Be sure to check if your watch function is getting called repeatedly. If it is
+then refer to the Cart example for possible solution.
+
+---
+
+Watching multiple things
+
+There are two primary option for watching multiple things at once:
+
+1. Put them into an array or object and pass in deepWatch = true.
+
+2. Watch a concatenated value of the properties.
+
+   Eg: $scope.$watch('things.a + things.b', callMe(...));
+
+
+---
+
+Organizing depnedencies with Modules
+
+Putting all the functionality in controllers works well only for samll apps.
+Modules is the place to organize your code.
+
+Modules provide a way to group dependencies for a functional area with the
+application.  Modules are also a mechanism to automatically resolve
+dependencies (dependency injection). These dependencies are a form of services
+for the app.
+
+Use modules for code that several components of the app may need to use. Once
+again, these are referred to as services. Services are singleton (single-instance)
+object that carry out tasks necc. to support your apps functionality.
+
+Angular ships with several services already, such as:
+
+ - $location - browser location
+ - $route - for switching views based on location
+ - and $http - for talking to servers.
+
+NOTE: Services can be shared across controllers.
+
+TIP: Do NOT name your services with a $ at the beginning to ensure that there
+     are no collisions with the built in services.
+
+---
+
+3 ways to define services
+
+1. provider(name, Object or constructor())
+
+   Defines a configurable service with complex creation logic. If you pass an
+   object, it should have a function named $get that returns and instance of the service.
+
+2. factory(name, $getFunction())
+
+   A non-configrable service with complex creation logic. You specify a function
+   that, when called, returns the service instance. You can think of it as
+   provider(name, { $get:$getFunction() })
+
+3. service(name, constructor())
+
+   A non-configurable service with simple creation logic. Like the constructor
+   option with provider, Angular calls it to create the service instance.
+
+
+---
+
+Scopes
+
+The scope is the single source of truth for all things view related. In the 
+angular MVC model, the scope becomes the model.
+
+Reminder:
+- Model contains the data that represents the current state of the application
+- Views are what displays this data (DOM)
+- Controllers manage the relationship between the model and views
+
+
+Triggering events
+
+$broadcast -- dispatches the event downwards to all child scopes,
+$emit -- dispatches the event upwards through the scope hierarchy.
+
+
+---
+
+Filters
+
+A filter formats the value of an expression for display to the user. They can 
+be used in view templates, controllers or services and it is easy to define 
+your own filter.
+
+* Filters are applied within expressions like so:
+
+{{ expression | filter }}
+
+* Filters can be chained:
+
+{{ expression | filter1 | filter2 | ... }}
+
+* Filters can have arguments:
+
+{{ expression | filter:argument1:argument2:... }}
+
+---
+
+New filters
+
+* New filter providers are created with factories via the filterProvider.
+
+Any filter arguments are passed in as additional arguments to the filter 
+function.
+
+The filter function should be a pure function (always outputs same thing 
+with same inputs) and should be stateless.
+
+
+--- 
+
+Custom model update triggers
+
+By default, any change to the content will trigger a model update and form 
+validation. You can override this behavior useing the ngModelOptions 
+directive to bind only to specified list of events: 
+
+* ie: ng-model-options="{ updateOn: 'blur'}"
+
+
+---
+
+Custom validators
+
+With a custom directive, you can add your own validation finctions to the 
+$validators object on the ngModelController. To get hold of the controller, 
+you require it in the directive.
+
+---
+
+Modifying built-in validators
+
+$validators can be overwritten by a custom directive if you need 
+new functionality.
+
+
+---
+
+What are directives?
+
+Directives are markers on the DOM element (such as an attribute, element name, 
+comment, or css class) that tell AngularJS HTML compiler ($compile) to attach 
+a special behavior to that DOM element or even transform the DOM element 
+and it's children.
+
+* Angular comes with several directives built-in, like ngBind, ngModel, and ngClass.
+
+When Angular bootstraps your application, the HTML compiler traverses the DOM 
+matching directives atains the DOM elements.
+
+  ** So what does compilation mean anyway?
+
+  Compilation means attaching event listeners to the HTML to make it interactive. 
+  The reason the term "compile" is used is that the recursive process of attaching 
+  directives mirrors the process of compiling source code in compiled 
+  programming languages.
+
+
+---
+
+Modules
+
+A module is a container for the different parts of your app - controllers, services, 
+filters, directives, etc.
+
+Apps should probably contain multiple modules:
+
+1. A module for each feature
+2. A module for each reusable components (esp. directives and filters)
+3. And an application level module which depends on the above modules and contains
+   any initialization code.
+   
+   
+A module is a collection of configuration and run blocks which get applied to the 
+bootstrap process. In its simplest form the module consists of a collection of 
+configuration blocks and run blocks.
+
+1. Configuration blocks get executed during the provider registration and configuration 
+   phase. Only providers and contsants can be injected into configuration blocks.
+2. Run blocks get executed after the injector is created and are used to kickstart the 
+   application. Only instances and constants can be injected into run blocks. This is
+   to prevent further system configuration during application run time.
+   
+ex: 
+
+angular.module('myModule', [])
+    .config(function(injectables) { // provider-injector
+        // this is an example of a config block.
+        // You can has as many of these as you want
+        // You can only inject providers (not instances)
+        // into config blocks.
+    })
+    .run(function(injectables) {
+        // This is an example of a run block.
+        // You can have as many of these as you want.
+        // You can only inject instances (not providers)
+        // into run blocks
+    });
+    
+// end example
+
+
+NOTE: run blocks are the closest thing in Angular to the main method. A run block is 
+the code which needs to run to kickstart the application. It is executed after all of the 
+other services have been configured and the injector has been created. Run blocks 
+typically contain code which is hard to unit-test, and for this reason they should be 
+declared in isolated modules that can be ignored in unit tests.
