@@ -3,36 +3,65 @@
   <head>
     <title>Weather checker</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
-    <script src="script.js"></script>
+    <script src="js/script.js"></script>
 
-    <link type="text/css" rel="stylesheet" href="style.css" media="all" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css" media="all" />
   </head>
-  <body>
-    <div class="container" ng-app="weatherApp">
+  <body class="container">
+    <div class="weather-app" ng-app="weatherApp">
       <div ng-controller="MyWeatherController">
 
-        <h2>Current weather in {{currentCity}}</h2>
-        <div class="section current">
-          <form name="weather-form">
-            <label for="city">City, State / Zip code</label>
-            <input 
-              type="text" 
-              ng-model="city"> <!-- ng-model-options="{updateOn: 'submit'}" -->
-            <br>
-            <label for="units">Units</label>
-            <input type="radio" ng-model="units" value="metric"> Metric
-            <input type="radio" ng-model="units" value="imperial"> Imperial<br>
-            <button ng-click="updateData()">Update</button>
-            <h3>{{data.name}}</h3>
-            <p>{{description}}</p>
-            <p>Temperature: {{main.temp}}</p>
-            <p>Wind speed: {{wind.speed}}</p>
-          </form>
+        <div class="top-row clearfix">
+          <div class="section form-container">
+            <h2>Weather settings</h2>
+            <form name="weather-form">
+              <div class="squeeze">
+                <label for="city">City, State</label>
+                <input 
+                  type="text" 
+                  ng-model="city"> <!-- ng-model-options="{updateOn: 'submit'}" -->
+                <br>
+                <label for="units">Units: </label>
+                <input type="radio" ng-model="units" value="metric"> Metric
+                <input type="radio" ng-model="units" value="imperial"> Imperial<br>
+                <tz-select></tz-select>
+                <button ng-click="updateData()" class="btn btn-primary">Update</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="section current">
+            <h2>Current weather in {{currentCity}}</h2>
+            <div class="squeeze">
+              <h4>{{description}}</h4>
+              <div>Temperature: {{main.temp}}</div>
+              <div>Wind speed: {{wind.speed}}m/s</div>
+              <div><a href="{{mapLink}}" title="Map of {{currentCity}}">Map of {{currentCity}}</a></div>
+              <div>Sunrise: {{sunrise}}</div>
+              <div>Sunset: {{sunset}}</div>
+            </div>
+          </div>
         </div>
 
-        <h2>Weather forecast for {{currentCity}}</h2>
         <div class="section forecast">
-          
+          <h2>Weather forecast for {{currentCity}}</h2>
+          <div class="squeeze clearfix">
+            <div ng-repeat="day in days" class="forecast-day">
+              <h4>{{day.dayOfWeek}}</h4>
+              <div>
+                <h4>{{day.weather[0].main}}</h4>
+                <div>Cloud cover: {{day.clouds}}%</div>
+              </div>
+              <div>
+                <h4>Temperatures</h4>
+                <div>Morning: {{day.temp.morn}}</div>
+                <div>Day: {{day.temp.day}}</div>
+                <div>Evening: {{day.temp.eve}}</div>
+                <div>Night: {{day.temp.night}}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

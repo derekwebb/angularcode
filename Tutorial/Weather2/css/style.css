@@ -1,0 +1,50 @@
+body {
+  width: 50%;
+  margin: 2em auto;
+}
+
+h2 {
+  background: #32961e;
+  color: white;
+  padding: 10px;
+  margin-bottom: .5em;
+  margin-top: 0;
+}
+
+input {
+  margin-bottom: 1em;
+}
+
+tz-select select {
+  width: 95%;
+  margin-bottom: 1em;
+}
+
+.weather-app {
+  background: #f0f0f0;
+  padding: 0;
+  width: 100%;
+}
+
+.section.current {
+  width: 66.9%;
+  float: left;
+}
+.squeeze {
+  padding: 0 10px 10px;
+}
+
+.forecast-day {
+  width: 14.25%;
+  float: left;
+}
+
+.form-container {
+  padding: 0 0 10px 0;
+  float: left;
+  width: 33%;
+}
+
+.form-container h2 {
+  background: #d38d15;
+}

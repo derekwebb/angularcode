@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Select by partial</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css" media="all" />
+  </head>
+  <body class="container">
+    <div class="my-app" ng-app="myApp">
+      <div ng-controller="AppController">
+
+        <div class="top-row clearfix">
+          <div class="section form-container">
+            <h2>Weather settings</h2>
+            <form name="my-form">
+              <div class="squeeze">
+                <label for="city">City, State</label>
+                <input 
+                  type="text" 
+                  ng-model="city"> <!-- ng-model-options="{updateOn: 'submit'}" -->
+                <br>
+                <tz-select></tz-select>
+                <button ng-click="updateData()" class="btn btn-primary">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
