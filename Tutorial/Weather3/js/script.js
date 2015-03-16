@@ -11,6 +11,11 @@
 
       // Initial run to fetch weather data
       $scope.updateData();
+
+      $scope.tzChange = function(ev) {
+        console.log('Firing change');
+        //console.log(tzSelect);
+      };
     }])
 
 

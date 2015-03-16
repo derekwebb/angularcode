@@ -6,11 +6,17 @@
     .controller('MyWeatherController', ['$scope', '$http', '$log', 'weather', function($scope, $http, $log, weather) {
       $scope.city = 'Cincinnati';
       $scope.units = 'imperial';
+      $scope.tz = {};
 
-      $scope.timeZone = 15; // EST from tzselect
+      //$scope.timeZone = -5; // EST from tzselect
 
       $scope.updateData = function() {
         weather.updateData($scope, $http, $log);
+      };
+
+      $scope.tzChange = function(tzOffset) {
+        // tzOffset reports the timezone offset that the user selected (ie: 3, 5, -4, etc.)
+
       };
 
       // Initial run to fetch weather data
@@ -50,7 +56,6 @@
           scope.currentCity = data.name;
           scope.description = data.weather[0].description;
           scope.mapLink = 'http://maps.google.com/?ie=UTF8&hq=&ll='+data.coord.lat+','+data.coord.lon+'&z=15'; //http://maps.google.com/?ie=UTF8&hq=&ll=35.028028,-106.536655&z=13
-          console.log(data);
         })
         .error(function(data, status, headers, config) {
           log.error('Could not retrieve data from '+url);
@@ -87,7 +92,7 @@
             i++;
           });
           scope.days = data.list;
-          console.log(data);
+          //console.log(data);
         })
         .error(function(data, status, headers, config) {
           // Log an error
@@ -102,9 +107,7 @@
       return {
         restrict: 'E',
         link: function(scope, element, attrs) {
-          console.log(element);
-          
-
+          scope.tz.tzSelect = -5;
         },
 
         templateUrl: 'partials/tzselect.html'
