@@ -4,19 +4,17 @@
   var myApp = angular.module('weatherApp', [])
     
     .controller('MyWeatherController', ['$scope', '$http', '$log', 'weather', function($scope, $http, $log, weather) {
-      $scope.city = 'Cincinnati';
+      $scope.city  = 'Cincinnati';
       $scope.units = 'imperial';
-      $scope.tz = {};
+      $scope.tz    = {};
 
-      //$scope.timeZone = -5; // EST from tzselect
-
+      // Update all weather data
       $scope.updateData = function() {
-        weather.updateData($scope, $http, $log);
+        weather.updateData($scope, $http, $log); // calls factory service
       };
 
-      $scope.tzChange = function(tzOffset) {
-        // tzOffset reports the timezone offset that the user selected (ie: 3, 5, -4, etc.)
-
+      $scope.tz.tzChange = function() {
+        console.log($scope.tz.tzSelect);
       };
 
       // Initial run to fetch weather data
@@ -28,9 +26,18 @@
     .factory('weather', ['$http', function($http) {
       var services = {};
 
-      var formatTime = function(timestamp) {
+      // Timestamp is in seconds
+      var formatTime = function(timestamp, scope) {
+        console.log(scope);
+        console.log(scope.tz.tzSelect);
+        console.log(scope.tz.element);
+        var offset = scope.tz.element.find("option[value='"+scope.tz.tzSelect+"']").attr('tzOffset');
+        console.log(offset);
+
         var time = new Date(timestamp * 1000);
-        return time.toUTCString();
+
+        return moment(time).utcOffset(Number(offset)).format('h:mm:ssa'); //time.toUTCString();
+
       };
 
       services.updateData = function(scope, http, log) {
@@ -49,8 +56,8 @@
           callback: 'JSON_CALLBACK'
         }})
         .success(function(data, status, headers, config) {
-          scope.sunrise = formatTime(data.sys.sunrise);
-          scope.sunset  = formatTime(data.sys.sunset);
+          scope.sunrise = formatTime(data.sys.sunrise, scope);
+          scope.sunset  = formatTime(data.sys.sunset, scope);
           scope.main = data.main;
           scope.wind = data.wind;
           scope.currentCity = data.name;
@@ -107,7 +114,8 @@
       return {
         restrict: 'E',
         link: function(scope, element, attrs) {
-          scope.tz.tzSelect = -5;
+          scope.tz.element = element;
+          scope.tz.tzSelect = 14; // default value for the tzSelect selectbox
         },
 
         templateUrl: 'partials/tzselect.html'
