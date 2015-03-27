@@ -10,16 +10,16 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css" media="all" />
   </head>
-  <body class="container">
+  <body>
     <div class="weather-app" ng-app="weatherApp">
       <div ng-controller="MyWeatherController">
 
-        <div class="top-row clearfix">
-          <div class="section form-container">
+        <div class="row top-row row-no-gutter clearfix">
+          <div class="col-md-4 no-gutter form-container">
             <h2>Weather settings</h2>
             <form name="weather-form">
               <div class="squeeze">
-                <label for="city">City, State</label>
+                <label for="city">City, State </label>
                 <input 
                   type="text" 
                   ng-model="city"> 
@@ -27,35 +27,38 @@
                 <label for="units">Units: </label>
                 <input type="radio" ng-model="units" value="metric"> Metric
                 <input type="radio" ng-model="units" value="imperial"> Imperial<br>
-                <tz-select></tz-select>
                 <button ng-click="updateData()" class="btn btn-primary">Update</button>
               </div>
             </form>
           </div>
 
-          <div class="section current">
+          <div class="col-md-8 no-gutter current">
             <h2>Current weather in {{currentCity}}</h2>
             <div class="squeeze">
-              <h4>{{description}}</h4>
-              <div>Temperature: {{main.temp}}</div>
-              <div>Wind speed: {{wind.speed}}m/s</div>
-              <div><a href="{{mapLink}}" title="Map of {{currentCity}}">Map of {{currentCity}}</a></div>
-              <div>Sunrise in {{currentCity}}: {{sunrise}}</div>
-              <div>Sunset in {{currentCity}}: {{sunset}}</div>
+              <div class="col-md-6 no-gutter">
+                <h4><img ng-attr-src="{{currentIcon}}">{{description}}</h4>
+                <div>Temperature: {{main.temp}}</div>
+                <div>Wind speed: {{wind.speed}}m/s</div>
+              </div>
+              <div class="col-md-6 no-gutter">
+                Current time...
+                <div>Sunrise in {{currentCity}}: {{sunrise}}</div>
+                <div>Sunset in {{currentCity}}: {{sunset}}</div>
+                <div><a href="{{mapLink}}" title="Map of {{currentCity}}">Map of {{currentCity}}</a></div>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="section forecast">
+        <div class="row row-no-gutter forecast">
           <h2>Weather forecast for {{currentCity}}</h2>
-          <div class="squeeze clearfix">
+          <div class="clearfix">
             <div ng-repeat="day in days" class="forecast-day">
-              <h4>{{day.dayOfWeek}}</h4>
-              <div>
-                <h4>{{day.weather[0].main}}</h4>
+              <h4 class="day-header">{{day.dayOfWeek}}</h4>
+              <div class="icon"><img ng-attr-src="{{day.forecastIcon}}"></div>
+              <h4 class="day-weather">{{day.weather[0].main}}</h4>
+              <div class="squeeze">
                 <div>Cloud cover: {{day.clouds}}%</div>
-              </div>
-              <div>
                 <h4>Temperatures</h4>
                 <div>Morning: {{day.temp.morn}}</div>
                 <div>Day: {{day.temp.day}}</div>

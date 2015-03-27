@@ -6,16 +6,10 @@
     .controller('MyWeatherController', ['$scope', '$http', '$log', 'weather', function($scope, $http, $log, weather) {
       $scope.city  = 'Cincinnati';
       $scope.units = 'imperial';
-      $scope.tz    = {};
 
       // Update all weather data
       $scope.updateData = function() {
         weather.updateData($scope, $http, $log); // calls factory service
-      };
-
-      $scope.tz.tzChange = function() {
-        $scope.sunrise = weather.formatTime($scope.sunriseData, $scope);
-        $scope.sunset  = weather.formatTime($scope.sunsetData, $scope);
       };
 
       // Initial run to fetch weather data
@@ -27,33 +21,28 @@
     .factory('weather', ['$http', function($http) {
       var services = {};
 
-      // Timestamp is in seconds
-      /*var formatTime = function(timestamp, scope) {
-        //console.log(scope);
-        //console.log(scope.tz.tzSelect);
-        //console.log(scope.tz.element);
-        var option = scope.tz.element.find("option[value='"+scope.tz.tzSelect+"']");
-        var dayLightSavings = option.attr('useDaylightTime');
-        var offset = option.attr('tzOffset');
-        //console.log(dayLightSavings);
-        //console.log(offset);
+      services.fetchTZInfo = function(tzParams) {
+        //var url = "https://maps.googleapis.com/maps/api/timezone/json?location=39.161999,-84.456886&timestamp=1427392872";
+        var url = "https://maps.googleapis.com/maps/api/timezone/json"; //?location="+lat+","+lon+"&timestamp="+timestamp;
 
-        var time = new Date(timestamp * 1000);
-//return time;
-        return moment(time).utcOffset(Number(offset)).format('h:mm:ssa'); //time.toUTCString();
-
-      };*/
+        tzParams.http.get(url, {params: {
+          location: tzParams.lat+','+tzParams.lon,
+          timestamp: tzParams.timestamp,
+          callback: 'JSON_CALLBACK'
+        }})
+        .success(function(data, status, headers, config) {
+          tzParams.scope.tzInfo  = data; // store the TZ data
+          tzParams.scope.sunrise = services.formatTime(tzParams.scope.sunriseData, tzParams.scope);
+          tzParams.scope.sunset  = services.formatTime(tzParams.scope.sunsetData, tzParams.scope);
+        })
+        .error(function(data, status, headers, config) {
+          tzParams.log.error('Could not retrieve data from '+url);
+        });
+      };
 
       services.formatTime = function(timestamp, scope) {
-        var option = scope.tz.element.find("option[value='"+scope.tz.tzSelect+"']");
-        var dayLightSavings = option.attr('useDaylightTime');
-        var offset = option.attr('tzOffset');
-        //console.log(dayLightSavings);
-        //console.log(offset);
-
         var time = new Date(timestamp * 1000);
-//return 5;
-        return moment(time).utcOffset(Number(offset)).format('h:mm:ssa'); //time.toUTCString();
+        return moment(time).utcOffset((scope.tzInfo.rawOffset / (60*60)) + scope.tzInfo.dstOffset / (60*60)).format('h:mm:ssa'); //time.toUTCString();
       };
 
       services.updateData = function(scope, http, log) {
@@ -72,15 +61,28 @@
           callback: 'JSON_CALLBACK'
         }})
         .success(function(data, status, headers, config) {
-          scope.sunriseData = data.sys.sunrise; //formatTime(data.sys.sunrise, scope);
-          scope.sunsetData  = data.sys.sunset; //formatTime(data.sys.sunset, scope);
-          scope.sunrise     = services.formatTime(data.sys.sunrise, scope);
-          scope.sunset      = services.formatTime(data.sys.sunset, scope);
+          // call up the timezone data
+          var tzInfoParams = {
+            lat: data.coord.lat, 
+            lon: data.coord.lon, 
+            timestamp: data.dt, 
+            http: http,
+            log: log,
+            scope: scope
+          };
+          services.fetchTZInfo(tzInfoParams);
+          
+          // Apply other scope data
+          scope.sunriseData = data.sys.sunrise;
+          scope.sunsetData  = data.sys.sunset;
           scope.main = data.main;
           scope.wind = data.wind;
           scope.currentCity = data.name;
           scope.description = data.weather[0].description;
-          scope.mapLink = 'http://maps.google.com/?ie=UTF8&hq=&ll='+data.coord.lat+','+data.coord.lon+'&z=15'; //http://maps.google.com/?ie=UTF8&hq=&ll=35.028028,-106.536655&z=13
+          scope.currentIcon = 'http://openweathermap.org/img/w/'+data.weather[0].icon+'.png';
+          scope.mapLink = 'http://maps.google.com/?ie=UTF8&hq=&ll='+data.coord.lat+','+data.coord.lon+'&z=15';
+          //console.log('Current');
+          //console.log(data);
         })
         .error(function(data, status, headers, config) {
           log.error('Could not retrieve data from '+url);
@@ -111,13 +113,18 @@
         .success(function(data, status, headers, config) {
           var dayData = getDays();
           var i = 0;
+
           angular.forEach(data.list, function(value, key) {
             var forecastDay = (dayData.dayOfWeek + i) % 7;
             data.list[key].dayOfWeek = days[forecastDay];
+            data.list[key].forecastIcon = 'http://openweathermap.org/img/w/'+data.list[key].weather[0].icon+'.png';
             i++;
           });
+
           scope.days = data.list;
-          //console.log(data);
+
+          console.log('Forecast');
+          console.log(data);
         })
         .error(function(data, status, headers, config) {
           // Log an error
@@ -126,18 +133,6 @@
       };
 
       return services;
-    }])
-
-    .directive('tzSelect', function() {
-      return {
-        restrict: 'E',
-        link: function(scope, element, attrs) {
-          scope.tz.element = element;
-          scope.tz.tzSelect = 14; // default value for the tzSelect selectbox
-        },
-
-        templateUrl: 'partials/tzselect.html'
-      };
-    });
+    }]);
 
 } (window.angular));

@@ -1,0 +1,87 @@
+html {
+  min-height: 100%;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNiIgaGVpZ2h0PSI2Ij4KPHJlY3Qgd2lkdGg9IjYiIGhlaWdodD0iNiIgZmlsbD0iI2VlZWVlZSI+PC9yZWN0Pgo8ZyBpZD0iYyI+CjxyZWN0IHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGZpbGw9IiNlNmU2ZTYiPjwvcmVjdD4KPHJlY3QgeT0iMSIgd2lkdGg9IjMiIGhlaWdodD0iMiIgZmlsbD0iI2Q4ZDhkOCI+PC9yZWN0Pgo8L2c+Cjx1c2UgeGxpbms6aHJlZj0iI2MiIHg9IjMiIHk9IjMiPjwvdXNlPgo8L3N2Zz4=");
+}
+
+body {
+  margin: 2em auto;
+  max-width: 1200px;
+}
+
+h2 {
+  background: #32961e;
+  color: white;
+  padding: 10px;
+  margin-bottom: .5em;
+  margin-top: 0;
+}
+
+input {
+  margin-bottom: 1em;
+}
+
+.weather-app {
+  background: #f0f0f0;
+  padding: 0;
+  width: 100%;
+  border: 3px double #c0c0c0;
+}
+
+.forecast > h2 {
+  margin-bottom: 0;
+}
+
+.forecast-day {
+  width: 14.28%;
+  float: left;
+}
+
+.forecast-day .icon {
+  margin-left: 10px;
+}
+
+.forecast-day .day-weather {
+  background: #d0d0d0;
+  margin: 0 0 10px;
+  padding: 10px;
+}
+
+.day-header {
+  background: #f9f3a7;
+  margin: 0;
+  padding: 10px;
+}
+
+.squeeze {
+  padding: 0 10px 10px;
+}
+
+.form-container {
+  padding: 0 0 10px 0;
+}
+
+.form-container h2 {
+  background: #d38d15;
+}
+
+.no-gutter {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.row-no-gutter {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.btn-primary {
+  margin-top: 1em;
+}
+
+.top-row {
+  padding-bottom: 1em;
+}
+
+.left {
+  float: left;
+}
