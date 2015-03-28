@@ -21,6 +21,55 @@
     .factory('weather', ['$http', function($http) {
       var services = {};
 
+      // Return the wind direction by cardinal coordinates
+      services.windDirections = function(angle) {
+        var range = []; // holds the current range
+        var directions = {
+          "North":           [348.75, 11.25],
+          "North-northeast": [11.25, 33.75],
+          "Northeast":       [33.75, 56.25],
+          "East-northeast":  [56.25, 78.75],
+          "East":            [78.75, 101.25],
+          "East-southeast":  [101.25, 123.75],
+          "Southeast":       [123.75, 146.25],
+          "South-southeast": [146.25, 168.75],
+          "South":           [168.75, 191.25],
+          "South-southwest": [191.25, 213.75],
+          "Southwest":       [213.75, 236.25],
+          "West-southwest":  [236.25, 258.75],
+          "West":            [258.75, 281.25],
+          "West-northwest":  [281.25, 303.75],
+          "Northwest":       [303.75, 326.25],
+          "North-northwest": [326.25, 348.75]
+        };
+
+        for (var key in directions) {
+          if (directions.hasOwnProperty(key)) {
+            range = directions[key];
+            // North is a special case
+            if ((angle > range[0] || angle <= range[1]) && (angle > 348.75 || angle <= 11.25)) {
+              return key;
+            }
+            else if (angle > range[0] && angle <= range[1]) {
+              return key;
+            }
+          }
+        }
+      };
+
+      services.windSpeed = function(scope) {
+        if (scope.units == 'imperial') {
+          scope.wind.speed = (scope.wind.speed * 2.23694);
+          scope.wind.gust  = (scope.wind.gust * 2.23694);
+          scope.wind.units = 'mph';
+        }
+        else {
+          scope.wind.speed = (scope.wind.speed * 3.6);
+          scope.wind.gust  = (scope.wind.gust * 3.6);
+          scope.wind.units = 'kph';
+        }
+      };
+
       services.fetchTZInfo = function(tzParams) {
         //var url = "https://maps.googleapis.com/maps/api/timezone/json?location=39.161999,-84.456886&timestamp=1427392872";
         var url = "https://maps.googleapis.com/maps/api/timezone/json"; //?location="+lat+","+lon+"&timestamp="+timestamp;
@@ -75,14 +124,18 @@
           // Apply other scope data
           scope.sunriseData = data.sys.sunrise;
           scope.sunsetData  = data.sys.sunset;
-          scope.main = data.main;
-          scope.wind = data.wind;
+          scope.main        = data.main;
+          scope.main.units  = (scope.units == 'imperial') ? 'F' : 'C';
+          scope.wind        = data.wind;
+          scope.wind.dir    = services.windDirections(data.wind.deg); 
           scope.currentCity = data.name;
           scope.description = data.weather[0].description;
           scope.currentIcon = 'http://openweathermap.org/img/w/'+data.weather[0].icon+'.png';
-          scope.mapLink = 'http://maps.google.com/?ie=UTF8&hq=&ll='+data.coord.lat+','+data.coord.lon+'&z=15';
+          scope.mapLink     = 'http://maps.google.com/?ie=UTF8&hq=&ll='+data.coord.lat+','+data.coord.lon+'&z=15';
+          
+          services.windSpeed(scope);
           //console.log('Current');
-          //console.log(data);
+          console.log(scope);
         })
         .error(function(data, status, headers, config) {
           log.error('Could not retrieve data from '+url);
@@ -122,9 +175,8 @@
           });
 
           scope.days = data.list;
-
-          console.log('Forecast');
-          console.log(data);
+          //console.log('Forecast');
+          //console.log(data);
         })
         .error(function(data, status, headers, config) {
           // Log an error
@@ -134,5 +186,7 @@
 
       return services;
     }]);
+
+    //.directive('myClock', ['dateFilter']);
 
 } (window.angular));

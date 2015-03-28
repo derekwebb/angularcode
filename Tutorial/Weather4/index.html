@@ -12,7 +12,7 @@
   </head>
   <body>
     <div class="weather-app" ng-app="weatherApp">
-      <div ng-controller="MyWeatherController">
+      <div class="weather-container" ng-controller="MyWeatherController">
 
         <div class="row top-row row-no-gutter clearfix">
           <div class="col-md-4 no-gutter form-container">
@@ -37,13 +37,15 @@
             <div class="squeeze">
               <div class="col-md-6 no-gutter">
                 <h4><img ng-attr-src="{{currentIcon}}">{{description}}</h4>
-                <div>Temperature: {{main.temp}}</div>
-                <div>Wind speed: {{wind.speed}}m/s</div>
+                <div>Temperature: {{main.temp}}&deg;{{main.units}}</div>
+                <div>Wind speed: {{wind.speed | number:2}}{{wind.units}}</div>
+                <div>Wind direction: {{wind.dir}}</div>
               </div>
               <div class="col-md-6 no-gutter">
                 Current time...
                 <div>Sunrise in {{currentCity}}: {{sunrise}}</div>
                 <div>Sunset in {{currentCity}}: {{sunset}}</div>
+                <div>City timezone: {{tzInfo.timeZoneName}}</div>
                 <div><a href="{{mapLink}}" title="Map of {{currentCity}}">Map of {{currentCity}}</a></div>
               </div>
             </div>
@@ -60,10 +62,10 @@
               <div class="squeeze">
                 <div>Cloud cover: {{day.clouds}}%</div>
                 <h4>Temperatures</h4>
-                <div>Morning: {{day.temp.morn}}</div>
-                <div>Day: {{day.temp.day}}</div>
-                <div>Evening: {{day.temp.eve}}</div>
-                <div>Night: {{day.temp.night}}</div>
+                <div>Morning: {{day.temp.morn}}&deg;{{main.units}}</div>
+                <div>Day: {{day.temp.day}}&deg;{{main.units}}</div>
+                <div>Evening: {{day.temp.eve}}&deg;{{main.units}}</div>
+                <div>Night: {{day.temp.night}}&deg;{{main.units}}</div>
               </div>
             </div>
           </div>

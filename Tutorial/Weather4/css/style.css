@@ -1,11 +1,14 @@
 html {
   min-height: 100%;
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNiIgaGVpZ2h0PSI2Ij4KPHJlY3Qgd2lkdGg9IjYiIGhlaWdodD0iNiIgZmlsbD0iI2VlZWVlZSI+PC9yZWN0Pgo8ZyBpZD0iYyI+CjxyZWN0IHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGZpbGw9IiNlNmU2ZTYiPjwvcmVjdD4KPHJlY3QgeT0iMSIgd2lkdGg9IjMiIGhlaWdodD0iMiIgZmlsbD0iI2Q4ZDhkOCI+PC9yZWN0Pgo8L2c+Cjx1c2UgeGxpbms6aHJlZj0iI2MiIHg9IjMiIHk9IjMiPjwvdXNlPgo8L3N2Zz4=");
+  font-size: 16px;
 }
 
 body {
   margin: 2em auto;
   max-width: 1200px;
+  font-size: 1em;
+  background-color: transparent;
 }
 
 h2 {
@@ -21,10 +24,14 @@ input {
 }
 
 .weather-app {
-  background: #f0f0f0;
   padding: 0;
-  width: 100%;
+  margin-left: 2%;
+  margin-right: 2%;
+  width: 96%;
   border: 3px double #c0c0c0;
+}
+.weather-app .weather-container {
+  background: #fff;
 }
 
 .forecast > h2 {
@@ -36,12 +43,39 @@ input {
   float: left;
 }
 
+// Protofluid display
+@media screen and (max-width: 965px),
+screen and (max-device-width: 965px) {
+    .forecast-day {
+      width: 33%;
+    }
+}
+@media screen and (max-width: 650px),
+screen and (max-device-width: 650px) {
+    .forecast-day {
+      width: 50%;
+    }
+}
+@media screen and (max-device-width: 650px),
+screen and (max-device-width: 450px) {
+    .forecast-day {
+      width: 100%;
+    }
+}
+
+.forecast-day:first-child {
+  background: #cce6ff;
+}
+.forecast-day:first-child .day-weather {
+  background: #bcd6ef;
+}
+
 .forecast-day .icon {
   margin-left: 10px;
 }
 
 .forecast-day .day-weather {
-  background: #d0d0d0;
+  background: #cce6ff;
   margin: 0 0 10px;
   padding: 10px;
 }
@@ -61,7 +95,7 @@ input {
 }
 
 .form-container h2 {
-  background: #d38d15;
+  background: #c67c05;
 }
 
 .no-gutter {
